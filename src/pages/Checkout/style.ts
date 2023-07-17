@@ -1,7 +1,8 @@
 import styled from 'styled-components'
+import * as RadioGroup from '@radix-ui/react-radio-group'
 
 export const MainContainer = styled.main`
-  margin-top: 2.5rem;
+  margin: 2.5rem 0;
   display: flex;
   width: 100%;
   gap: 2rem;
@@ -202,5 +203,66 @@ export const PreviewFooter = styled.div`
 
   button:hover {
     background-color: ${(props) => props.theme['yellow-dark']};
+  }
+`
+
+export const PaymentInfoContainer = styled.div`
+  margin-top: 0.75rem;
+  background-color: ${(props) => props.theme['base-card']};
+  padding: 2.5rem;
+  border-radius: 6px;
+`
+export const TitleContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+
+  svg {
+    color: ${(props) => props.theme['purple-normal']};
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: ${(props) => props.theme['base-subtitle']};
+  }
+
+  p:last-child {
+    font-size: 0.875rem;
+    color: ${(props) => props.theme['base-text']};
+  }
+`
+
+export const TransactionType = styled(RadioGroup.Root)`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 0.5rem;
+`
+
+export const TransactionTypeButton = styled(RadioGroup.Item)`
+  background: ${(props) => props.theme['base-button']};
+  margin-top: 2rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 0;
+  color: ${(props) => props.theme['base-subtitle']};
+  svg {
+    color: ${(props) => props.theme['purple-normal']};
+  }
+  &[data-state='unchecked']:hover {
+    transition: background-color 0.2s;
+    background: ${(props) => props.theme['purple-light']};
+  }
+  &[data-state='checked'] {
+    background: ${(props) => props.theme['purple-light']};
+    &:focus {
+      outline: 1px solid ${(props) => props.theme['purple-normal']};
+    }
   }
 `
