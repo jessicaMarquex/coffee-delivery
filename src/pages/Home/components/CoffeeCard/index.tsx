@@ -11,16 +11,25 @@ import {
   Price,
   Tag,
 } from './style'
-import React from 'react'
-import { PropsData } from '../../../../../data.ts'
+import React, { useContext } from 'react'
 import { QuantidadeItem } from '../../../components/QuantidadeItem/index.tsx'
+import { CoffeesContext } from '../../../../contexts/CoffeesContext.tsx'
 
-export const CoffeeCard: React.FC<{ coffeeData: PropsData[] }> = ({
-  coffeeData,
-}) => {
+interface ICoffees {
+  id: number
+  nome: string
+  descricao: string
+  preco: number
+  tags: Array<string>
+  src: string
+}
+
+export const CoffeeCard: React.FC = () => {
+  const { coffees } = useContext(CoffeesContext)
+
   return (
     <Container>
-      {coffeeData.map((coffee) => {
+      {coffees.map((coffee: ICoffees) => {
         return (
           <ItemCard key={coffee.id}>
             <CoffeImg src={coffee.src} alt={coffee.descricao} />

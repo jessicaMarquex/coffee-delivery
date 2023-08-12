@@ -7,10 +7,12 @@ export const DefaultLayout = () => {
   return (
     <>
       <Header>
-        <img
-          src={logo}
-          alt="Logo da Coffee Delivery, uma imagem de copo roxo junto com o nome da empresa."
-        />
+        <a href="/">
+          <img
+            src={logo}
+            alt="Logo da Coffee Delivery, uma imagem de copo roxo junto com o nome da empresa."
+          />
+        </a>
         <Navbar>
           <LocaleContainer>
             <MapPin size={22} weight="fill" />

@@ -29,11 +29,15 @@ import {
   TransactionType,
   TransactionTypeButton,
 } from './style'
-import dataCoffee from '../../../data'
 import { QuantidadeItem } from '../components/QuantidadeItem'
+import { useContext } from 'react'
+import { CoffeesContext } from '../../contexts/CoffeesContext'
 
 export const Checkout = () => {
-  console.log(dataCoffee)
+  const { coffees } = useContext(CoffeesContext)
+
+  console.log(coffees)
+
   return (
     <MainContainer>
       <div>
@@ -95,12 +99,12 @@ export const Checkout = () => {
         <PreviewContent>
           <PreviewCoffeeItem>
             <ImageCoffee
-              src={dataCoffee[0].src}
-              alt={dataCoffee[0].descricao}
+              src={coffees[1].src}
+              alt={coffees[1].descricao}
             ></ImageCoffee>
             <PreviewCoffeeItemContainer>
               <CoffeeDetails>
-                <p>{dataCoffee[0].nome}</p>
+                <p>{coffees[1].nome}</p>
               </CoffeeDetails>
               <ButtonsCoffeeItem>
                 <QuantidadeItem />
@@ -110,17 +114,17 @@ export const Checkout = () => {
                 </RemoveButton>
               </ButtonsCoffeeItem>
             </PreviewCoffeeItemContainer>
-            <strong>R${dataCoffee[0].preco}</strong>
+            <strong>R${coffees[2].preco}</strong>
           </PreviewCoffeeItem>
           <Divider />
           <PreviewCoffeeItem>
             <ImageCoffee
-              src={dataCoffee[2].src}
-              alt={dataCoffee[2].descricao}
+              src={coffees[0].src}
+              alt={coffees[0].descricao}
             ></ImageCoffee>
             <PreviewCoffeeItemContainer>
               <CoffeeDetails>
-                <p>{dataCoffee[2].nome}</p>
+                <p>{coffees[0].nome}</p>
               </CoffeeDetails>
               <ButtonsCoffeeItem>
                 <QuantidadeItem />
@@ -130,7 +134,7 @@ export const Checkout = () => {
                 </RemoveButton>
               </ButtonsCoffeeItem>
             </PreviewCoffeeItemContainer>
-            <strong>R${dataCoffee[2].preco}</strong>
+            <strong>R${coffees[0].preco}</strong>
           </PreviewCoffeeItem>
           <Divider />
           <PreviewFooter>
