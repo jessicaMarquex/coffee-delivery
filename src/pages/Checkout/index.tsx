@@ -30,13 +30,64 @@ import {
   TransactionTypeButton,
 } from './style'
 import { QuantidadeItem } from '../components/QuantidadeItem'
-import { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { CoffeesContext } from '../../contexts/CoffeesContext'
+import axios from 'axios'
 
-export const Checkout = () => {
+export const Checkout: React.FC = () => {
   const { coffees } = useContext(CoffeesContext)
+  const [ufs, setUfs] = useState<string[]>([])
+  const [cep, setCep] = useState('') // Aqui definimos o estado do CEP
+  const [addressData, setAddressData] = useState({
+    street: '',
+    city: '',
+    state: '',
+    district: '',
+  })
 
-  console.log(coffees)
+  useEffect(() => {
+    axios
+      .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+      .then((response) => {
+        const ufNames = response.data.map((uf: any) => uf.sigla)
+        setUfs(ufNames)
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar UFs:', error)
+      })
+  }, [])
+
+  const formatCep = (cep: string) => {
+    const cleanedCep = cep.replace(/\D/g, '') // Remove todos os caracteres não numéricos
+    if (cleanedCep.length <= 5) {
+      return cleanedCep
+    }
+    return `${cleanedCep.slice(0, 5)}-${cleanedCep.slice(5, 8)}`
+  }
+
+  const handleCepChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newCep = event.target.value
+    const cleanedCep = newCep.replace(/\D/g, '')
+    setCep(cleanedCep)
+
+    if (cleanedCep.length === 8) {
+      axios
+        .get(`https://viacep.com.br/ws/${newCep}/json/`)
+        .then((response) => {
+          const data = response.data
+
+          setAddressData({
+            street: data.logradouro,
+            city: data.localidade,
+            state: data.uf,
+            district: data.bairro,
+          })
+        })
+        .catch((error) => {
+          console.error('Erro ao buscar dados do CEP:', error)
+        })
+    }
+  }
 
   return (
     <MainContainer>
@@ -53,17 +104,42 @@ export const Checkout = () => {
             </HeaderContent>
             <Content>
               <CEPAndStreetContainer>
-                <input type="number" placeholder="CEP" />
-                <input type="text" placeholder="Rua" />
+                <input
+                  type="text"
+                  placeholder="CEP"
+                  value={formatCep(cep)}
+                  onChange={handleCepChange}
+                />
+                <input
+                  type="text"
+                  placeholder="Rua"
+                  value={addressData.street}
+                />
               </CEPAndStreetContainer>
               <NumberAndComplementContainer>
                 <input type="number" placeholder="Número" />
                 <input type="text" placeholder="Complemento" />
               </NumberAndComplementContainer>
               <LastContainer>
-                <input type="text" placeholder="Bairro" />
-                <input type="text" placeholder="Cidade" />
-                <input type="text" placeholder="UF" />
+                <input
+                  type="text"
+                  placeholder="Bairro"
+                  value={addressData.district}
+                />
+                <input
+                  type="text"
+                  placeholder="Cidade"
+                  value={addressData.city}
+                />
+                <select name="uf" value={addressData.state}>
+                  {' '}
+                  <option value="">UF</option>
+                  {ufs.map((state) => (
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
+                  ))}
+                </select>
               </LastContainer>
             </Content>
           </form>
@@ -97,45 +173,51 @@ export const Checkout = () => {
       <PreviewContainer>
         <h1>Cafés selecionados</h1>
         <PreviewContent>
-          <PreviewCoffeeItem>
-            <ImageCoffee
-              src={coffees[1].src}
-              alt={coffees[1].descricao}
-            ></ImageCoffee>
-            <PreviewCoffeeItemContainer>
-              <CoffeeDetails>
-                <p>{coffees[1].nome}</p>
-              </CoffeeDetails>
-              <ButtonsCoffeeItem>
-                <QuantidadeItem />
-                <RemoveButton>
-                  <Trash size={16} weight="regular" />
-                  <p>REMOVER</p>
-                </RemoveButton>
-              </ButtonsCoffeeItem>
-            </PreviewCoffeeItemContainer>
-            <strong>R${coffees[2].preco}</strong>
-          </PreviewCoffeeItem>
-          <Divider />
-          <PreviewCoffeeItem>
-            <ImageCoffee
-              src={coffees[0].src}
-              alt={coffees[0].descricao}
-            ></ImageCoffee>
-            <PreviewCoffeeItemContainer>
-              <CoffeeDetails>
-                <p>{coffees[0].nome}</p>
-              </CoffeeDetails>
-              <ButtonsCoffeeItem>
-                <QuantidadeItem />
-                <RemoveButton>
-                  <Trash size={16} weight="regular" />
-                  <p>REMOVER</p>
-                </RemoveButton>
-              </ButtonsCoffeeItem>
-            </PreviewCoffeeItemContainer>
-            <strong>R${coffees[0].preco}</strong>
-          </PreviewCoffeeItem>
+          {coffees.length > 0 ? (
+            <>
+              <PreviewCoffeeItem>
+                <ImageCoffee
+                  src={coffees[1].src}
+                  alt={coffees[1].descricao}
+                ></ImageCoffee>
+                <PreviewCoffeeItemContainer>
+                  <CoffeeDetails>
+                    <p>{coffees[1].nome}</p>
+                  </CoffeeDetails>
+                  <ButtonsCoffeeItem>
+                    <QuantidadeItem />
+                    <RemoveButton>
+                      <Trash size={16} weight="regular" />
+                      <p>REMOVER</p>
+                    </RemoveButton>
+                  </ButtonsCoffeeItem>
+                </PreviewCoffeeItemContainer>
+                <strong>R${coffees[2].preco}</strong>
+              </PreviewCoffeeItem>
+              <Divider />
+              <PreviewCoffeeItem>
+                <ImageCoffee
+                  src={coffees[0].src}
+                  alt={coffees[0].descricao}
+                ></ImageCoffee>
+                <PreviewCoffeeItemContainer>
+                  <CoffeeDetails>
+                    <p>{coffees[0].nome}</p>
+                  </CoffeeDetails>
+                  <ButtonsCoffeeItem>
+                    <QuantidadeItem />
+                    <RemoveButton>
+                      <Trash size={16} weight="regular" />
+                      <p>REMOVER</p>
+                    </RemoveButton>
+                  </ButtonsCoffeeItem>
+                </PreviewCoffeeItemContainer>
+                <strong>R${coffees[0].preco}</strong>
+              </PreviewCoffeeItem>
+            </>
+          ) : (
+            <p>Nenhum café selecionado.</p>
+          )}
           <Divider />
           <PreviewFooter>
             <div>
