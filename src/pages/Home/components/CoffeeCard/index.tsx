@@ -25,11 +25,18 @@ interface ICoffees {
 }
 
 export const CoffeeCard: React.FC = () => {
-  const { coffees } = useContext(CoffeesContext)
+  const { coffees, handleItemCounterModifier, itemCounts } =
+    useContext(CoffeesContext)
 
   return (
     <Container>
       {coffees.map((coffee: ICoffees) => {
+        const itemCount = itemCounts[coffee.id] || 0
+
+        const updateItemCount = (action: string) => {
+          handleItemCounterModifier(coffee.id, action)
+        }
+
         return (
           <ItemCard key={coffee.id}>
             <CoffeImg src={coffee.src} alt={coffee.descricao} />
@@ -48,7 +55,7 @@ export const CoffeeCard: React.FC = () => {
                 </p>
               </Price>
               <ContentFooter>
-                <QuantidadeItem />
+                <QuantidadeItem count={itemCount} setCount={updateItemCount} />
                 <div>
                   <ShoppingCart size={22} weight="fill" />
                 </div>

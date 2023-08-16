@@ -1,27 +1,18 @@
 import { Minus, Plus } from 'phosphor-react'
 import { QtddCoffee } from './styles'
-import { useState } from 'react'
+interface QuantidadeItemProps {
+  count: number
+  setCount: () => void
+}
 
-export const QuantidadeItem = () => {
-  const [count, setCount] = useState(0)
-
-  const incrementCount = () => {
-    setCount((prev) => (prev += 1))
-  }
-
-  const decrementCount = () => {
-    if (count <= 0) setCount(0)
-
-    setCount((prev) => (prev -= 1))
-  }
-
+export const QuantidadeItem = ({ count, setCount }: QuantidadeItemProps) => {
   return (
     <QtddCoffee>
-      <button type="button" onClick={decrementCount}>
+      <button type="button" onClick={() => setCount('decrement')}>
         <Minus size={14} weight="bold" />
       </button>
       <p>{count <= 0 ? 0 : count}</p>
-      <button type="button" onClick={incrementCount}>
+      <button type="button" onClick={() => setCount('increment')}>
         <Plus size={14} weight="bold" />
       </button>
     </QtddCoffee>

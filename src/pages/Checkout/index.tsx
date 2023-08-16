@@ -37,13 +37,14 @@ import axios from 'axios'
 export const Checkout: React.FC = () => {
   const { coffees } = useContext(CoffeesContext)
   const [ufs, setUfs] = useState<string[]>([])
-  const [cep, setCep] = useState('') // Aqui definimos o estado do CEP
+  const [cep, setCep] = useState('')
   const [addressData, setAddressData] = useState({
     street: '',
     city: '',
     state: '',
     district: '',
   })
+  const [count, setCount] = useState(0)
 
   useEffect(() => {
     axios
@@ -58,7 +59,7 @@ export const Checkout: React.FC = () => {
   }, [])
 
   const formatCep = (cep: string) => {
-    const cleanedCep = cep.replace(/\D/g, '') // Remove todos os caracteres não numéricos
+    const cleanedCep = cep.replace(/\D/g, '')
     if (cleanedCep.length <= 5) {
       return cleanedCep
     }
@@ -185,7 +186,7 @@ export const Checkout: React.FC = () => {
                     <p>{coffees[1].nome}</p>
                   </CoffeeDetails>
                   <ButtonsCoffeeItem>
-                    <QuantidadeItem />
+                    <QuantidadeItem count={count} setCount={setCount} />
                     <RemoveButton>
                       <Trash size={16} weight="regular" />
                       <p>REMOVER</p>
@@ -205,7 +206,7 @@ export const Checkout: React.FC = () => {
                     <p>{coffees[0].nome}</p>
                   </CoffeeDetails>
                   <ButtonsCoffeeItem>
-                    <QuantidadeItem />
+                    <QuantidadeItem count={count} setCount={setCount} />
                     <RemoveButton>
                       <Trash size={16} weight="regular" />
                       <p>REMOVER</p>

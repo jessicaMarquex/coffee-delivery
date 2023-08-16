@@ -19,6 +19,8 @@ interface ICoffees {
 interface ICoffeesContext {
   coffees: ICoffees[]
   fetchCoffees: () => Promise<void>
+  itemCounts: { [itemId: number]: number }
+  handleItemCounterModifier: (itemId: number, type: string) => void
 }
 
 interface ICoffeesProvider {
@@ -36,6 +38,24 @@ export function CoffeesProvider({ children }: ICoffeesProvider) {
     setCoffees(response.data)
   }, [])
 
+  const [itemCounts, setItemCounts] = useState<{ [itemId: number]: number }>({})
+
+  const handleItemCounterModifier = (itemId: number, action: string) => {
+    setItemCounts((prevItemCounts) => {
+      const currentCount = prevItemCounts[itemId] || 0
+
+      switch (action) {
+        case 'increment':
+          return { ...prevItemCounts, [itemId]: currentCount + 1 }
+        case 'decrement':
+          if (currentCount <= 0) return prevItemCounts
+          return { ...prevItemCounts, [itemId]: currentCount - 1 }
+        default:
+          return prevItemCounts
+      }
+    })
+  }
+
   useEffect(() => {
     fetchCoffees()
   }, [fetchCoffees])
@@ -45,6 +65,8 @@ export function CoffeesProvider({ children }: ICoffeesProvider) {
       value={{
         coffees,
         fetchCoffees,
+        itemCounts,
+        handleItemCounterModifier,
       }}
     >
       {children}
