@@ -3,14 +3,13 @@ import * as RadioGroup from '@radix-ui/react-radio-group'
 
 export const MainContainer = styled.main`
   margin: 2.5rem 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: 70% 30%;
   width: 100%;
   gap: 2rem;
 `
 
 export const FormContainer = styled.div`
-  min-width: 560px;
-  flex-grow: 2;
   h1 {
     font-size: 1.125rem;
     color: ${(props) => props.theme['base-subtitle']};
@@ -25,12 +24,28 @@ export const FormContainer = styled.div`
     flex-direction: column;
     gap: 2rem;
 
-    input {
+    input,
+    select {
       padding: 0.75rem;
       border-radius: 4px;
       border: 1px solid ${(props) => props.theme['base-button']};
       background: ${(props) => props.theme['base-input']};
+      color: ${(props) => props.theme['base-label']};
     }
+    input,
+    select:valid {
+      color: ${(props) => props.theme['base-text']};
+    }
+  }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: none;
+    padding-right: 20px;
+    background-image: url('');
+    cursor: pointer;
   }
 `
 
