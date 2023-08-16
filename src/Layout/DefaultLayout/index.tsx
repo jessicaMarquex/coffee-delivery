@@ -16,7 +16,7 @@ export const DefaultLayout = () => {
         <Navbar>
           <LocaleContainer>
             <MapPin size={22} weight="fill" />
-            <p>Porto Alegre, RS</p>
+            <p>Oi, somos de Sobral - CE 😊</p>
           </LocaleContainer>
           <a href="/checkout">
             <ShoppingCart size={22} weight="fill" />
