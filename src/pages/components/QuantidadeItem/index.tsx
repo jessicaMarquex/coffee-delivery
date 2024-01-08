@@ -2,7 +2,7 @@ import { Minus, Plus } from 'phosphor-react'
 import { QtddCoffee } from './styles'
 interface QuantidadeItemProps {
   count: number
-  setCount: () => void
+  setCount: (action: 'increment' | 'decrement') => void
 }
 
 export const QuantidadeItem = ({ count, setCount }: QuantidadeItemProps) => {

@@ -33,9 +33,15 @@ export const CoffeeCard: React.FC = () => {
       {coffees.map((coffee: ICoffees) => {
         const itemCount = itemCounts[coffee.id] || 0
 
-        const updateItemCount = (action: string) => {
+        const updateItemCount = (action: 'increment' | 'decrement') => {
           handleItemCounterModifier(coffee.id, action)
         }
+
+        const formatPrice = Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+          minimumFractionDigits: 2,
+        })
 
         return (
           <ItemCard key={coffee.id}>
@@ -51,7 +57,7 @@ export const CoffeeCard: React.FC = () => {
             <CoffeeFooter>
               <Price>
                 <p>
-                  R$ <span>{coffee.preco}</span>
+                  <span>{formatPrice.format(coffee.preco)}</span>
                 </p>
               </Price>
               <ContentFooter>

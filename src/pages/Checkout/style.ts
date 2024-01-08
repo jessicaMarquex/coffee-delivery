@@ -122,7 +122,7 @@ export const PreviewContent = styled.div`
 `
 export const PreviewCoffeeItem = styled.div`
   display: flex;
-  gap: 1.25rem;
+  gap: 0.5rem;
   strong {
     color: ${(props) => props.theme['base-text']};
   }

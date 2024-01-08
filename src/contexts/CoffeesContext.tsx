@@ -1,26 +1,22 @@
-import {
-  ReactNode,
-  createContext,
-  useState,
-  useCallback,
-  useEffect,
-} from 'react'
-import { api } from '../lib/axios'
+import { ReactNode, createContext, useState } from 'react'
+import coffees from '../../data.json'
 
-interface ICoffees {
+interface ICoffee {
   id: number
   nome: string
   descricao: string
   preco: number
-  tags: Array<string>
+  tags: string[]
   src: string
 }
 
 interface ICoffeesContext {
-  coffees: ICoffees[]
-  fetchCoffees: () => Promise<void>
+  coffees: ICoffee[] // Agora é um array de ICoffee
   itemCounts: { [itemId: number]: number }
-  handleItemCounterModifier: (itemId: number, type: string) => void
+  handleItemCounterModifier: (
+    itemId: number,
+    type: 'increment' | 'decrement',
+  ) => void
 }
 
 interface ICoffeesProvider {
@@ -30,14 +26,7 @@ interface ICoffeesProvider {
 export const CoffeesContext = createContext({} as ICoffeesContext)
 
 export function CoffeesProvider({ children }: ICoffeesProvider) {
-  const [coffees, setCoffees] = useState<ICoffees[]>([])
-
-  const fetchCoffees = useCallback(async () => {
-    const response = await api.get('coffees')
-
-    setCoffees(response.data)
-  }, [])
-
+  console.log(coffees)
   const [itemCounts, setItemCounts] = useState<{ [itemId: number]: number }>({})
 
   const handleItemCounterModifier = (itemId: number, action: string) => {
@@ -56,15 +45,10 @@ export function CoffeesProvider({ children }: ICoffeesProvider) {
     })
   }
 
-  useEffect(() => {
-    fetchCoffees()
-  }, [fetchCoffees])
-
   return (
     <CoffeesContext.Provider
       value={{
         coffees,
-        fetchCoffees,
         itemCounts,
         handleItemCounterModifier,
       }}

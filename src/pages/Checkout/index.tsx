@@ -44,7 +44,25 @@ export const Checkout: React.FC = () => {
     state: '',
     district: '',
   })
-  const [count, setCount] = useState(0)
+
+  const [itemCounts, setItemCounts] = useState<{ [itemId: number]: number }>({})
+
+  const updateItemCount = (
+    itemId: number,
+    action: 'increment' | 'decrement',
+  ) => {
+    setItemCounts((prevItemCounts) => {
+      const currentCount = prevItemCounts[itemId] || 0
+
+      if (action === 'increment') {
+        return { ...prevItemCounts, [itemId]: currentCount + 1 }
+      } else if (action === 'decrement' && currentCount > 0) {
+        return { ...prevItemCounts, [itemId]: currentCount - 1 }
+      }
+
+      return prevItemCounts
+    })
+  }
 
   useEffect(() => {
     axios
@@ -89,6 +107,12 @@ export const Checkout: React.FC = () => {
         })
     }
   }
+
+  const formatPrice = Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+  })
 
   return (
     <MainContainer>
@@ -151,7 +175,8 @@ export const Checkout: React.FC = () => {
             <div>
               <p>Pagamento</p>
               <p>
-                O pagamento é feito na entrega. Escolha a forma que deseja pagar
+                O pagamento é feito na entrega. Escolha a forma que deseja
+                pagar:
               </p>
             </div>
           </TitleContainer>
@@ -186,14 +211,19 @@ export const Checkout: React.FC = () => {
                     <p>{coffees[1].nome}</p>
                   </CoffeeDetails>
                   <ButtonsCoffeeItem>
-                    <QuantidadeItem count={count} setCount={setCount} />
+                    <QuantidadeItem
+                      count={itemCounts[coffees[0].id] || 0}
+                      setCount={(action) =>
+                        updateItemCount(coffees[0].id, action)
+                      }
+                    />
                     <RemoveButton>
                       <Trash size={16} weight="regular" />
                       <p>REMOVER</p>
                     </RemoveButton>
                   </ButtonsCoffeeItem>
                 </PreviewCoffeeItemContainer>
-                <strong>R${coffees[2].preco}</strong>
+                <strong>{formatPrice.format(coffees[2].preco)}</strong>
               </PreviewCoffeeItem>
               <Divider />
               <PreviewCoffeeItem>
@@ -206,14 +236,19 @@ export const Checkout: React.FC = () => {
                     <p>{coffees[0].nome}</p>
                   </CoffeeDetails>
                   <ButtonsCoffeeItem>
-                    <QuantidadeItem count={count} setCount={setCount} />
+                    <QuantidadeItem
+                      count={itemCounts[coffees[0].id] || 0}
+                      setCount={(action) =>
+                        updateItemCount(coffees[0].id, action)
+                      }
+                    />
                     <RemoveButton>
                       <Trash size={16} weight="regular" />
                       <p>REMOVER</p>
                     </RemoveButton>
                   </ButtonsCoffeeItem>
                 </PreviewCoffeeItemContainer>
-                <strong>R${coffees[0].preco}</strong>
+                <strong>{formatPrice.format(coffees[0].preco)}</strong>
               </PreviewCoffeeItem>
             </>
           ) : (

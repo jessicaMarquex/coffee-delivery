@@ -1,5 +1,4 @@
-{
-  "coffees": [
+ [
     {
       "id": 1,
       "nome": "Expresso Tradicional",
@@ -113,4 +112,3 @@
       "src": "./src/assets/irlandes.png"
     }
   ]
-}
